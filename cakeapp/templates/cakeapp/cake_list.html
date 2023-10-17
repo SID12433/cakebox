@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/c74c679b1d.js" crossorigin="anonymous"></script>   
+</head>
+<body>
+    <h5 class="p-3" style="background-color: rgb(187, 187, 186);">welcome {{request.user}}</h5>
+    {%if messages%}
+        {%for m in messages%}
+            <div class="ms-2">
+                {{m}}
+            </div>
+        {%endfor%}
+    {%endif%}
+    <div class="container mt-5 d-flex flex-column align-items-center">
+        <table class="table mt-5  table-striped  p-4">
+            <tr>
+                <td>Name</td>
+                <td>Flavour</td>
+                <td>image</td>
+                <td>Action</td>
+            </tr>
+            {%for cake in cakes%}
+                <tr>
+                    <td>{{cake.name}}</td>
+                    <td>{{cake.flavour}}</td>
+                    <td>
+                        <img src="{{cake.image.url}}" alt="" width="200px" height="250px">
+                    </td>
+                    <td>
+                        <a href="{%url 'cake-edit' cake.id%}" class="me-3"><i class="fa-solid fa-pen"></i></a>
+                        <a href="{%url 'varient-add' cake.id%}" class="me-3"><i class="fa-solid fa-plus"></i></a>
+                        <a href="{%url 'cake-detail' cake.id%}" class="me-3"><i class="fa-solid fa-list"></i></a>
+                        <a href="{%url 'cake-remove' cake.id%}"><i class="fa-solid fa-trash" style="color: #e34635;"></i></a>
+                    </td>
+                </tr>
+            {%endfor%}
+        </table>
+    </div>
+    <a href="{%url 'cake-add'%}" class="btn btn-outline-success">Add new cake</a>
+
+</body>
+</html>
