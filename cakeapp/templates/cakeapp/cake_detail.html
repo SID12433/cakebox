@@ -29,13 +29,20 @@
                     <td>Price</td>
                     <td>Size</td>
                     <td>Shape</td>
+                    <td>Action</td>
                 </tr>
                 {%for c in cake.cakevarients_set.all%}
                     <tr>
                         <td>{{c.price}}</td>
                         <td>{{c.size}}</td>
                         <td>{{c.shape}}</td>
+                        <td>
+                            <a href="{%url 'edit-varient' c.id%}" class="btn btn-outline-info me-4">Edit</a>
+                            <a href="{%url 'remove-varient' c.id%}" class="btn btn-outline-danger me-4">Delete</a>
+                            <a href="{%url 'offer-add' c.id%}" class="btn btn-outline-success">Add Offer</a>
+                        </td>
                     </tr>
+
                 {%endfor%}
             </table>
             </div>

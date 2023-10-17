@@ -3,7 +3,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from cakeapp.views import SignUpView,SignInView,IndexView,CategoryCreateView,remove_category,active_category\
-    ,CakeCreateView,CakeListView,CakeUpdateView,remove_cakeview,CakeDetailView,CakeVarientCreateView
+    ,CakeCreateView,CakeListView,CakeUpdateView,remove_cakeview,CakeDetailView\
+        ,CakeVarientCreateView,CakeVarientUpdateView,remove_varientview,OfferCreateView
 
 
 urlpatterns=[
@@ -20,6 +21,10 @@ urlpatterns=[
     path("cake/<int:pk>/remove",remove_cakeview,name="cake-remove"),
     path("cake/<int:pk>",CakeDetailView.as_view(),name="cake-detail"),
     path("cake/<int:pk>/varient/add",CakeVarientCreateView.as_view(),name="varient-add"),
+    path("varients/<int:pk>/edit",CakeVarientUpdateView.as_view(),name="edit-varient"),
+    path("varients/<int:pk>/remove",remove_varientview,name="remove-varient"),
+    path("varients/<int:pk>/offer/add",OfferCreateView.as_view(),name="offer-add"),
+    
     
 
 

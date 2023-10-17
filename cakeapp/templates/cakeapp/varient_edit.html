@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/c74c679b1d.js" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+
+    <div class="container mt-5 d-flex flex-column align-items-center ">
+       <div class="border border-dark p-5">
+            <form action="" method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                <h4 class="mb-5">EDIT VARIENT</h4>
+                {{form.as_p}}
+                <input type="submit" value="update" class="form-control btn btn-dark mb-2">
+                {%if messages%}
+                    {%for m in messages%}
+                        <div>
+                            {{m}}
+                        </div>
+                    {%endfor%}
+                {%endif%}
+            </form>
+       </div>
+    </div>
+</body>
+</html>
