@@ -122,12 +122,6 @@ class CakeVarientCreateView(CreateView):
         form.instance.cake=obj
         return super().form_valid(form)
     
-    def get_success_url(self):
-        id=self.kwargs.get("pk")
-        cake_varient_object=CakeVarients.objects.get(id=id)
-        cake_id=cake_varient_object.cake.id
-        
-        return reverse("cake-detail",kwargs={"pk":cake_id})
     
 class CakeDetailView(DetailView):
     template_name="cakeapp/cake_detail.html"
