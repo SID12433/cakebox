@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.views.generic import CreateView,FormView,TemplateView,ListView,UpdateView,DetailView
 from cakeapp.forms import RegistrationForm,LoginForm,CategoryCreateForm,CakeAddForm,CakeVarientForm,OfferAddForm
 from cakeapp.models import User,CakeCategory,Cakes,CakeVarients,Offers
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 
@@ -120,8 +120,14 @@ class CakeVarientCreateView(CreateView):
         obj=Cakes.objects.get(id=id)
         messages.success(self.request,"varient added successfully!")
         form.instance.cake=obj
-        
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        id=self.kwargs.get("pk")
+        cake_varient_object=CakeVarients.objects.get(id=id)
+        cake_id=cake_varient_object.cake.id
+        
+        return reverse("cake-detail",kwargs={"pk":cake_id})
     
 class CakeDetailView(DetailView):
     template_name="cakeapp/cake_detail.html"
@@ -142,18 +148,26 @@ class CakeVarientUpdateView(UpdateView):
         messages.error(self.request,"Failed to update cake varient")
         return super().form_invalid(form)
     
+    def get_success_url(self):
+        id=self.kwargs.get("pk")
+        cake_varient_object=CakeVarients.objects.get(id=id)
+        cake_id=cake_varient_object.cake.id
+        return reverse("cake-detail",kwargs={"pk":cake_id})
+    
 def remove_varientview(request,*args,**kwargs):
     id=kwargs.get("pk")
-    CakeVarients.objects.filter(id=id).delete()
-    return redirect("cake-list") 
+    cake_varient_object=CakeVarients.objects.get(id=id)
+    cake_id=cake_varient_object.cake.id
+    cake_varient_object.delete()
+    return redirect("cake-detail",pk=cake_id) 
     
 class OfferCreateView(CreateView):
     template_name="cakeapp/offer_add.html"
     form_class=OfferAddForm
     model=Offers
     success_url=reverse_lazy("cake-list")
-
-    def form_valid(self, form):
+    
+    def form_valid(self, form):         
         id=self.kwargs.get("pk")
         obj=CakeVarients.objects.get(id=id)
         form.instance.cakevarient=obj
@@ -164,3 +178,20 @@ class OfferCreateView(CreateView):
         messages.error(self.request,"Failed to add offer")
         return super().form_invalid(form)
     
+    def get_success_url(self):
+        id=self.kwargs.get("pk")
+        cakevarientobject=CakeVarients.objects.get(id=id)
+        cake_id=cakevarientobject.cake.id
+        
+        return reverse("cake-detail",kwargs={"pk":cake_id})
+    
+def remove_offerview(request,*args,**kwargs):
+    id=kwargs.get("pk")
+    offer_object=Offers.objects.get(id=id)
+    cake_id=offer_object.cakevarient.cake.id
+    offer_object.delete()
+    return redirect("cake-detail",pk=cake_id)   
+
+def signoutview(request,*args,**kwargs):
+    logout(request)
+    return redirect("signin")

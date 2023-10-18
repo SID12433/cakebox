@@ -4,13 +4,14 @@ from django.conf.urls.static import static
 
 from cakeapp.views import SignUpView,SignInView,IndexView,CategoryCreateView,remove_category,active_category\
     ,CakeCreateView,CakeListView,CakeUpdateView,remove_cakeview,CakeDetailView\
-        ,CakeVarientCreateView,CakeVarientUpdateView,remove_varientview,OfferCreateView
+        ,CakeVarientCreateView,CakeVarientUpdateView,remove_varientview,OfferCreateView,signoutview,remove_offerview
 
 
 urlpatterns=[
 
     path("register/",SignUpView.as_view(),name="signup"),
     path("",SignInView.as_view(),name="signin"),
+    path("logout/",signoutview,name="signout"),
     path("index/",IndexView.as_view(),name="index"),
     path("add/",CategoryCreateView.as_view(),name="add-category"),
     path("categories/<int:pk>/remove",remove_category,name="remove-category"),
@@ -24,6 +25,9 @@ urlpatterns=[
     path("varients/<int:pk>/edit",CakeVarientUpdateView.as_view(),name="edit-varient"),
     path("varients/<int:pk>/remove",remove_varientview,name="remove-varient"),
     path("varients/<int:pk>/offer/add",OfferCreateView.as_view(),name="offer-add"),
+    path("varients/<int:pk>/offer/remove",remove_offerview,name="offer-remove"),
+    
+    
     
     
 
