@@ -5,6 +5,27 @@ from cakeapp.models import User,CakeCategory,Cakes,CakeVarients,Offers
 from django.urls import reverse_lazy,reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
+from django.utils.decorators import method_decorator
+
+def signin_required(fn):
+    def wrapper(request,*args,**kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request,"invalid session!..please login")
+            return redirect("signin")
+        else:
+            return fn(request,*args,**kwargs)
+    return wrapper
+
+def is_admin(fn):
+    def wrapper(request,*args,**kwargs):
+        if not request.user.is_superuser:
+            messages.error(request,"Permission denied for current user !")
+            return redirect("signin")
+        else:
+            return fn(request,*args,**kwargs)
+    return wrapper
+
+decs=[signin_required,is_admin]
 
 class IndexView(TemplateView):
     template_name="cakeapp/index.html"
@@ -42,7 +63,7 @@ class SignInView(FormView):
                 return render(request,self.template_name,{"form":form})
  
  
- 
+@method_decorator(decs,name="dispatch") 
 class CategoryCreateView(CreateView,ListView):
     template_name="cakeapp/category_add.html"
     form_class=CategoryCreateForm
@@ -57,20 +78,24 @@ class CategoryCreateView(CreateView,ListView):
     def form_invalid(self, form):
         messages.error(self.request,"category adding failed")
         return super().form_invalid(form)
-  
+    
+@signin_required
+@is_admin
 def remove_category(request,*args,**kwargs):
     id=kwargs.get("pk")
     CakeCategory.objects.filter(id=id).update(is_active=False)
     messages.success(request,"category is not active")
     return redirect("add-category") 
 
+@signin_required
+@is_admin
 def active_category(request,*args,**kwargs):
     id=kwargs.get("pk")
     CakeCategory.objects.filter(id=id).update(is_active=True)
     messages.success(request,"category is active")
     return redirect("add-category")
 
-
+@method_decorator(decs,name="dispatch")
 class CakeCreateView(CreateView):
     template_name="cakeapp/cake_add.html"
     model=Cakes
@@ -84,12 +109,14 @@ class CakeCreateView(CreateView):
     def form_invalid(self, form):
         messages.error(self.request,"Failed to add cake")
         return super().form_invalid(form)
-    
+
+@method_decorator(decs,name="dispatch")   
 class CakeListView(ListView):
     template_name="cakeapp/cake_list.html"
     model=Cakes
     context_object_name="cakes"
-    
+
+@method_decorator(decs,name="dispatch")   
 class CakeUpdateView(UpdateView):
     template_name="cakeapp/cake_edit.html"
     form_class=CakeAddForm
@@ -103,12 +130,15 @@ class CakeUpdateView(UpdateView):
     def form_invalid(self, form):
         messages.error(self.request,"Failed to update cake")
         return super().form_invalid(form)
-    
+
+@signin_required
+@is_admin   
 def remove_cakeview(request,*args,**kwargs):
     id=kwargs.get("pk")
     Cakes.objects.filter(id=id).delete()
     return redirect("cake-list")   
 
+@method_decorator(decs,name="dispatch")
 class CakeVarientCreateView(CreateView):
     template_name="cakeapp/cakevarient_add.html"
     form_class=CakeVarientForm
@@ -122,12 +152,13 @@ class CakeVarientCreateView(CreateView):
         form.instance.cake=obj
         return super().form_valid(form)
     
-    
+@method_decorator(decs,name="dispatch")    
 class CakeDetailView(DetailView):
     template_name="cakeapp/cake_detail.html"
     model=Cakes
     context_object_name="cake"
-    
+
+@method_decorator(decs,name="dispatch")   
 class CakeVarientUpdateView(UpdateView):
     template_name="cakeapp/varient_edit.html"
     form_class=CakeVarientForm
@@ -147,14 +178,17 @@ class CakeVarientUpdateView(UpdateView):
         cake_varient_object=CakeVarients.objects.get(id=id)
         cake_id=cake_varient_object.cake.id
         return reverse("cake-detail",kwargs={"pk":cake_id})
-    
+
+@signin_required
+@is_admin   
 def remove_varientview(request,*args,**kwargs):
     id=kwargs.get("pk")
     cake_varient_object=CakeVarients.objects.get(id=id)
     cake_id=cake_varient_object.cake.id
     cake_varient_object.delete()
     return redirect("cake-detail",pk=cake_id) 
-    
+
+@method_decorator(decs,name="dispatch")    
 class OfferCreateView(CreateView):
     template_name="cakeapp/offer_add.html"
     form_class=OfferAddForm
@@ -178,7 +212,9 @@ class OfferCreateView(CreateView):
         cake_id=cakevarientobject.cake.id
         
         return reverse("cake-detail",kwargs={"pk":cake_id})
-    
+
+@signin_required
+@is_admin   
 def remove_offerview(request,*args,**kwargs):
     id=kwargs.get("pk")
     offer_object=Offers.objects.get(id=id)
