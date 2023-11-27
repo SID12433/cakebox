@@ -1,47 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/c74c679b1d.js" crossorigin="anonymous"></script>   
-</head>
-<body>
-    <h5 class="p-3" style="background-color: rgb(187, 187, 186);">welcome {{request.user}}</h5>
-    {%if messages%}
-        {%for m in messages%}
-            <div class="ms-2">
-                {{m}}
-            </div>
-        {%endfor%}
-    {%endif%}
-    <div class="container mt-5 d-flex flex-column align-items-center">
-        <table class="table mt-5  table-striped  p-4">
-            <tr>
-                <td>Name</td>
-                <td>Flavour</td>
-                <td>image</td>
-                <td>Action</td>
-            </tr>
-            {%for cake in cakes%}
-                <tr>
-                    <td>{{cake.name}}</td>
-                    <td>{{cake.flavour}}</td>
-                    <td>
-                        <img src="{{cake.image.url}}" alt="" width="200px" height="250px">
-                    </td>
-                    <td>
-                        <a href="{%url 'cake-edit' cake.id%}" class="me-3"><i class="fa-solid fa-pen"></i></a>
-                        <a href="{%url 'varient-add' cake.id%}" class="me-3"><i class="fa-solid fa-plus"></i></a>
-                        <a href="{%url 'cake-detail' cake.id%}" class="me-3"><i class="fa-solid fa-list"></i></a>
-                        <a href="{%url 'cake-remove' cake.id%}"><i class="fa-solid fa-trash" style="color: #e34635;"></i></a>
-                    </td>
-                </tr>
-            {%endfor%}
-        </table>
-    </div>
-    <a href="{%url 'cake-add'%}" class="btn btn-outline-success">Add new cake</a>
+{%extends 'cakeapp/base.html'%}
 
-</body>
-</html>
+{%block body_block%}
+
+<div class="container row">
+
+    {%for cake in cakes%} 
+        <div class="col-lg-3 col-md-3 col-12">
+            <div class="product-card me-4 mb-3">
+                <div><img src="{{cake.image.url}}" alt="" width="250px" height="250px"></div>
+                <div class="product-details">
+                <h2 class="product-title">{{cake.name}}</h2>
+                <p class="product-description">Category: {{cake.category}}</p>
+                <p class="product-description">Flavour: {{cake.flavour}}</p>
+                <td class="buttons">
+                    <a href="{%url 'cake-edit' cake.id%}" class="buttons"><i class="fa-solid fa-pen"></i></a>
+                    <a href="{%url 'varient-add' cake.id%}" class="buttons"><i class="fa-solid fa-plus"></i></a>
+                    <a href="{%url 'cake-detail' cake.id%}" class="buttons"><i class="fa-solid fa-list"></i></a>
+                    <a href="{%url 'cake-remove' cake.id%}" class="buttons"><i class="fa-solid fa-trash" style="color: #e34635;"></i></a>
+                </td>
+                </div>
+            </div>
+        </div>
+    {%endfor%}
+</div>
+
+
+<style>
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      margin-top: 60px;
+    }
+    .buttons{
+        margin-left: 25px;
+    }
+  
+    .product-card {
+      width: 250px;
+      height: auto;
+      background-color: #1e1e1e;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  
+    .product-image {
+      flex: 1;
+      background: url('product-image.jpg') no-repeat center/cover;
+      border-radius: 20px 20px 0 0;
+    }
+  
+    .product-details {
+      padding: 20px;
+    }
+  
+    .product-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0;
+    }
+  
+    .product-description {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+
+  </style>
+
+{%endblock%}

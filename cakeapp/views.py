@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.views.generic import CreateView,FormView,TemplateView,ListView,UpdateView,DetailView
 from cakeapp.forms import RegistrationForm,LoginForm,CategoryCreateForm,CakeAddForm,CakeVarientForm,OfferAddForm
-from cakeapp.models import User,CakeCategory,Cakes,CakeVarients,Offers
+from cakeapp.models import User,CakeCategory,Cakes,CakeVarients,Offers,Reviews,Orders
 from django.urls import reverse_lazy,reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
@@ -27,8 +27,14 @@ def is_admin(fn):
 
 decs=[signin_required,is_admin]
 
-class IndexView(TemplateView):
-    template_name="cakeapp/index.html"
+class HomeView(TemplateView):
+    template_name="cakeapp/home.html"
+
+@method_decorator(decs,name="dispatch")     
+class DashboardView(TemplateView):
+    template_name="cakeapp/dashboard.html"
+
+
 
 class SignUpView(CreateView):
     template_name="cakeapp/register.html"
@@ -57,7 +63,7 @@ class SignInView(FormView):
             if usr:
                 login(request,usr)
                 messages.success(request,"login success")
-                return redirect("add-category")
+                return redirect("dashboard")
             else:
                 messages.error(request,"failed to login")
                 return render(request,self.template_name,{"form":form})
@@ -115,6 +121,12 @@ class CakeListView(ListView):
     template_name="cakeapp/cake_list.html"
     model=Cakes
     context_object_name="cakes"
+    
+@method_decorator(decs,name="dispatch")   
+class OrderListView(ListView):
+    template_name="cakeapp/orders.html"
+    model=Orders
+    context_object_name="orders"
 
 @method_decorator(decs,name="dispatch")   
 class CakeUpdateView(UpdateView):
@@ -213,6 +225,34 @@ class OfferCreateView(CreateView):
         
         return reverse("cake-detail",kwargs={"pk":cake_id})
 
+# order views
+ 
+@signin_required
+@is_admin
+def dispatched(request,*args,**kwargs):
+    id=kwargs.get("pk")
+    Orders.objects.filter(id=id).update(status="dispatched")
+    messages.success(request,"cake is dispatched")
+    return redirect("order-list")
+
+@signin_required
+@is_admin
+def intransit(request,*args,**kwargs):
+    id=kwargs.get("pk")
+    Orders.objects.filter(id=id).update(status="in-transit")
+    messages.success(request,"cake is in transit")
+    return redirect("order-list")
+
+@signin_required
+@is_admin
+def delivered(request,*args,**kwargs):
+    id=kwargs.get("pk")
+    Orders.objects.filter(id=id).update(status="delivered")
+    messages.success(request,"cake delivered success")
+    return redirect("order-list")
+
+
+
 @signin_required
 @is_admin   
 def remove_offerview(request,*args,**kwargs):
@@ -225,3 +265,12 @@ def remove_offerview(request,*args,**kwargs):
 def signoutview(request,*args,**kwargs):
     logout(request)
     return redirect("signin")
+
+@signin_required
+@is_admin
+def remove_review(request,*args,**kwargs):
+    id = kwargs.get("pk")
+    review_obj = Reviews.objects.get(id=id)
+    cake_id = review_obj.cake.id
+    review_obj.delete()
+    return redirect("cake-detail",pk=cake_id)

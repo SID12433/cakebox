@@ -1,0 +1,29 @@
+{%extends 'cakeapp/base.html'%}
+
+{%block body_block%}
+
+<div class="container">
+    {%if messages%}
+    {%for m in messages%}
+        <div>
+            {{m}}
+        </div>
+    {%endfor%}
+    {%endif%}
+
+    <h1 class="m">Hey <span class="text">{{request.user}},</span></h1>
+    <p class="text ms-2">welcome back</p>
+</div>
+
+<style>
+    .text{
+        text-transform: capitalize;
+    }
+    .m{
+        margin-top: 100px;
+        font-size: 70px;
+        font-family: 'Times New Roman', Times, serif;
+    }
+</style>
+
+{%endblock%}

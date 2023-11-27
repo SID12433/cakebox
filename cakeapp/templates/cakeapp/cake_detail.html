@@ -1,57 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/c74c679b1d.js" crossorigin="anonymous"></script>   
-   
-</head>
-<body style="height: 100vh;">
-    <a href="{%url 'cake-list'%}" class="p-3"><i class="fa-solid fa-circle-arrow-left"></i></a>  
-    <div class="container">
-        <div class="row">
-            <div class="col-4">
-                <div class="card mt-5" style="width:100%">
-                    <img src="{{cake.image.url}}" class="card-img-top" alt="..." height="350px" width="250px">
-                    <div class="card-body">
-                    <h5 class="card-title">{{cake.name}}</h5>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item">{{cake.flavour}}</li>
-                    <li class="list-group-item">{{cake.category}}</li>
-                    </ul>
+{%extends 'cakeapp/base.html'%}
+
+{%block body_block%}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-12">
+            <a href="{%url 'cake-list'%}" class="me-3"><i class="fa-solid fa-circle-chevron-left fa-lg" style="color: #ffffff;"></i></a>
+            <div class="product-card mt-3 text-white">
+                <img src="{{cake.image.url}}" class="card-img-top" alt="..." height="300px" width="300px">
+                <div class="card-body text-white">
+                    <h5 class="card-title back">{{cake.name}}</h5>
+                    <div class=" text-white back">Category : {{cake.category}}</div>
+                    <div class=" text-white back">Flavour : {{cake.flavour}}</div> 
                 </div>
             </div>
-            <div class="col-8 mt-5">
-                <table class="table table-striped">
+        </div>
+
+        <div class="col-8 mt-3">
+            
+            <table class="table table-striped">
+                <tr>
+                    
+                    <td>Price</td>
+                    <td>Size</td>
+                    <td>Shape</td>
+                    <td>Action</td>
+                </tr>
+                {%for c in cake.cakevarients_set.all%}
                     <tr>
-                        
-                        <td>Price</td>
-                        <td>Size</td>
-                        <td>Shape</td>
-                        <td>Action</td>
+                        <td>{{c.price}}</td>
+                        <td>{{c.size}}</td>
+                        <td>{{c.shape}}</td>
+                        <td>
+                            <a href="{%url 'edit-varient' c.id%}" class="btn btn-outline-info me-4">Edit</a>
+                            <a href="{%url 'remove-varient' c.id%}" class="btn btn-outline-danger me-4">Delete</a>
+                            <a href="{%url 'offer-add' c.id%}" class="btn btn-outline-success">Add Offer</a>
+                        </td>
                     </tr>
-                    {%for c in cake.cakevarients_set.all%}
+                {%endfor%}
+            </table>
+            <h5 class="mt-3 mb-3 ps-2">__________________ OFFERS __________________</h5>
+
+            <table class="table table-striped">
+                <tr>
+                    
+                    <td>Varient</td>
+                    <td>Offer_price</td>
+                    <td>Start_date</td>
+                    <td>End_date</td>
+                    <td>Action</td>
+                </tr>
+                {%for c in cake.cakevarients_set.all%}
+                    {%for o in c.offers_set.all%}
                         <tr>
-                            <td>{{c.price}}</td>
                             <td>{{c.size}}</td>
-                            <td>{{c.shape}}</td>
+                            <td>{{o.price}}</td>
+                            <td>{{o.start_date}}</td>
+                            <td>{{o.due_date}}</td>
                             <td>
-                                <a href="{%url 'edit-varient' c.id%}" class="btn btn-outline-info me-4">Edit</a>
-                                <a href="{%url 'remove-varient' c.id%}" class="btn btn-outline-danger me-4">Delete</a>
-                                <a href="{%url 'offer-add' c.id%}" class="btn btn-outline-success">Add Offer</a>
+                                <a href="{%url 'offer-remove' o.id %}"><i class="fa-solid fa-trash" style="color: #ea0b21;"></i></a>
                             </td>
                         </tr>
                     {%endfor%}
-                </table>
-                <h5 class="mt-3 mb-3 ps-2">__________________ OFFERS __________________</h5>
+                {%endfor%}
+            </table>
 
-                <div class="row mb-4 p-3 ">
+            <!-- <div class="row mb-2 p-3 ">
+                <div class="">
                     {%for c in cake.cakevarients_set.all%}
                         {%for o in c.offers_set.all%}
-                            <div class="col-6 border border-2 border shadow p-3">
+                            <div class=" border border-2 border shadow p-3 custom-shadow">
                                <div>Varient :{{c.size}}</div>
                                 <div>Offer_price :{{o.price}}</div>
                                 <div>Start_date :{{o.start_date}}</div>
@@ -63,8 +81,58 @@
                         {%endfor%}
                     {%endfor%}
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
-</body>
-</html>
+    <div class="row">
+        <!-- <h1 class="text-white title">User reviews</h1> -->
+        <h5 class="mt-3 mb-4 ps-2">__________________ REVIEWS __________________</h5>
+        <table class="table">
+          <thead>
+              <tr>
+                  <th>User</th>
+                  <th>Rating</th>
+                  <th>Comment</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for r in cake.reviews_set.all %}
+                <tr>
+                  <td>{{r.user}}</td>
+                  <td>{{r.rating}}</td>
+                  <td>{{r.comment}}</td>
+                  <td><a href="{% url 'review_delete' r.id %}"><i class="fa-solid fa-trash" style="color: #ea0b21;"></i></a></td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .back{
+        background-color: #1a1818;
+        margin-top: 13px;
+        margin-left: 13px;
+    }
+    .product-card {
+        width: 300px;
+        height: 450px;
+        background-color: #1a1818;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .card-title{
+        font-size: 25px;
+      }
+      .title{
+        font-size: 35px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      }
+</style>
+
+{%endblock%}

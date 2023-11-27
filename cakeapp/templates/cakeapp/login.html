@@ -3,25 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>cakebox</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/c74c679b1d.js" crossorigin="anonymous"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+        *{
+        	padding: 0;
+        	margin: 0;
+        	box-sizing: border-box;
+        	font-family: "Poppins", sans-serif;
+        	text-decoration: none;
+        	font-weight: bold;
+        	color: #363636;
+        }
+
+        ::-webkit-scrollbar{
+        	display: none;
+        }
+
+        body {
+        	width: 100%;
+        	min-height: 460px;
+        	height: 100vh;
+        	overflow: scroll;
+        	background: url("/cakeapp/static/assets/cake4.jpg")
+        		no-repeat center center;
+        	background-size: cover;
+        	backdrop-filter: blur(7px);
+        	display: grid;
+        	place-content: center;
+        }
+
+        .container {
+        	width: 100%;
+        	height: 100vh;
+        	display: flex;
+        	align-items: center;
+        	justify-content: center;
+        	width: 630px;
+        	height: 420px;
+        }
+
+        .banner {
+        	height: 100%;
+        	width: 350px;
+        	background: rgb(0, 0, 0, 0.4);
+        	border-radius: 20px 0 0 20px;
+        }
+        .banner{
+            background-image: url(/cakeapp/static/assets/cake2.jpg);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .banner * {
+        	margin: 40px;
+        	color: #ccc;
+        	cursor: default;
+        }
+
+		.message{
+			text-align: center;
+			margin-top: 10px;
+			margin-bottom: -15px;
+			text-transform: capitalize;
+			
+		}
+
+        .form-box {
+        	height: 100%;
+        	width: 280px;
+        	background: rgb(255, 255, 255);
+        	display: flex;
+        	flex-direction: column;
+        	align-items: center;
+        	border-radius: 0 20px 20px 0;
+        	position: relative;
+            
+        }
+
+        .form-heading {
+        	margin: 45px 0 20px;
+        	height: 55px;
+
+        }
+
+        .form-box small:first-of-type{
+        	margin-bottom: 20px;
+        }
+
+        a {
+        	font-size: small;
+        	color: #1663be;
+        	cursor: pointer;
+        }
+
+        input {
+        	margin-bottom: 15px;
+        	padding: 8px 15px;
+        	width: 220px;
+        	border: 1px solid #137b93;
+        	font-weight: normal;
+        	border-radius: 15px;
+        }
+
+        ::-ms-reveal {
+        	filter: invert(100%);
+        }
+
+        button {
+        	width: 215px;
+        	height: 38px;
+        	background: #28d2f8;
+        	color: #ffffff;
+        	cursor: pointer;
+        	border-radius: 20px;
+        	margin: 10px 0 20px 0;
+            border: 1px solid #137b93;
+
+        }
+        .media-logo{
+            margin-left: 10px;
+            font-size: larger;
+        }
+
+        @media (max-width: 720px) {
+        	.banner {
+        		display: none;
+        	}
+        	.content {
+        		display: flex;
+        		justify-content: center;
+        	}
+
+        	.form-box {
+        		border-radius: 20px;
+        	}
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        {%if messages%}
-            {%for m in messages%}
-                <div>
-                    {{m}}
-                </div>
-            {%endfor%}
-        {%endif%}
-        <form action="" method="post">
-            {%csrf_token%}
-            {{form.as_p}}
-            <input type="submit" value="signin">
-            <div>
-                <a href="{%url 'signup' %}">Dont have an account?signup</a>
-            </div> 
-        </form>
-    </div>
+        <div class="container">
+
+		<div class="banner">
+		</div>
+		<div class="form-box text-black text-center mt-2">
+			<div class="message">
+				{%if messages%}
+					{%for m in messages%}
+						<div>
+							{{m}}
+						</div>
+					{%endfor%}
+				{%endif%}
+			</div>
+            <div class=" form-heading text-center mb-5">
+                <h1 class="fw-bolder">Login</h1>
+            </div>
+			<form action="" method="post" class="form-box">
+				{%csrf_token%}
+				<input type="text" placeholder="Username" name="username">
+				<input type="password" placeholder="password" name="password">
+				<button class="form-control btn btn-info rounded-pill" type="submit">Login</button>
+            	<small>Or Signup using</small>
+            	<div>
+            	  	<a href="" class="media-logo"><i class="fa-brands fa-facebook"></i></a>
+            	  	<a href="" class="media-logo"><i class="fa-brands fa-twitter"></i></a>
+            	  	<a href="" class="media-logo"><i class="fa-brands fa-google"></i></a>
+          		</div>
+			</form>
+		</div>
+	</div>
+
 </body>
 </html>

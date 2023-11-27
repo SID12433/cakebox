@@ -16,6 +16,7 @@ class CakeCategory(models.Model):
         return self.name
     
 class Cakes(models.Model):
+    
     name=models.CharField(max_length=200)
     category=models.ForeignKey(CakeCategory,on_delete=models.SET_NULL,null=True)
     options=(
@@ -34,6 +35,11 @@ class Cakes(models.Model):
     )
     flavour=models.CharField(max_length=200,choices=options,default="choclate")
     image=models.ImageField(upload_to="images")
+
+    @property
+    def varients(self):
+        qs=self.cakevarients_set.all()
+        return qs
    
     def __str__(self):
         return self.name
@@ -54,6 +60,9 @@ class CakeVarients(models.Model):
     )
     shape=models.CharField(max_length=200,choices=option,default="round")
     cake=models.ForeignKey(Cakes,on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.cake.name
 
 class Offers(models.Model):
     cakevarient=models.ForeignKey(CakeVarients,on_delete=models.CASCADE)
@@ -89,6 +98,6 @@ class Orders(models.Model):
 
 class Reviews(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    cakevarient=models.ForeignKey(CakeVarients,on_delete=models.CASCADE)
+    cake=models.ForeignKey(Cakes,null=True,on_delete=models.SET_NULL)
     rating=models.PositiveIntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
     comment=models.CharField(max_length=300)

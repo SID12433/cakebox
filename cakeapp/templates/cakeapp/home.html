@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/c74c679b1d.js" crossorigin="anonymous"></script>
+    <link href="{%static 'css/home.css' %}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> 
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <nav class="navbar">
+                <div class="navbar-brand">Cakebox</div>
+                <div class="nav-items">
+                    <div><a class="nav-link active hover-border" aria-current="page" href="#">Home</a></div>
+                    <div><a class="nav-link center active hover-border" aria-current="page" href="#">About</a></div>
+                    <div><a class="nav-link active hover-border" aria-current="page" href="#">Blog</a></div>
+                </div>
+                <div class="navbar-link"><a class="nav-link active hover-border" aria-current="page" href="{%url 'signin'%}">Sign in</a></div>
+            </nav>
+        </div>
+        <div class="container main-body border border-dark border-2 mt-4">
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <div class="body-content">
+                        <div>Soft and moist, with layers so fine, A slice of cake, a moment divine, Whipped cream swirls and berrire bright, A treat so sweet, its pure delight.</div>
+                        <button class="btn btn-dark btn mt-3 p-2 ps-3 pe-3 rounded-pill"><a class="nav-link active" aria-current="page" href="{%url 'signup'%}">Lets Bake</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+
+<style>
+
+    .hover-border {
+        display: inline-block;
+        position: relative;
+        color: #000;
+      }
+      
+      .hover-border::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #000;
+        transition: width 0.3s ease; /* Smooth transition for the border */
+      }
+      
+      .hover-border:hover::after {
+        width: 100%; /* Expand the border on hover */
+      }
+      
+</style>
